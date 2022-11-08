@@ -1,0 +1,39 @@
+---
+import '../global.css'
+import Layout from '../layouts/Layout.astro';;
+
+const apiKey = 'qbvZBIIcRgDkWWReYPptJS9hyOUnYJsI7BMlHhmr'
+
+const res = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`)
+const data = await res.json()
+console.log(data)
+
+export { data }
+---
+
+<Layout title="Nasa API - Daily, new events">
+	<main class="hero min-h-screen">
+		<div class="hero-content flex-col lg:flex-row gap-10">
+			{
+				data.media_type === "video" ? <iframe src={data.url} class="max-w-md rounded-box shadow-2xl" width="640" height="315" autoplay='true' frameborder="0" allow="autoplay; fullscreen; accelerometer" allowfullscreen></iframe> : <img src={data.hdurl} class="max-w-md rounded-box shadow-2xl">
+			}
+			<div class="flex flex-col">
+				<a class="text-5xl font-bold mb-5 text-center" >{data.title}</a>
+				<div class="flex flex-row justify-center gap-4 mb-3">
+					{
+						data.copyright === "" ? <div class="badge badge-primary badge-lg text-white font-bold">{data.copyright}</div> : <div class=""></div>
+					}
+					<div class="badge badge-secondary badge-lg text-white font-bold">{data.date}</div>
+				</div>
+				<p class="text-justify">{data.explanation}</p>
+			</div>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1em;
+	}
+</style>
